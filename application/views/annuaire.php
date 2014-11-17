@@ -7,7 +7,7 @@
 		<title>Intra 42</title>
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?php echo css_url()?> bootstrap.min.css"el="stylesheet">
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->

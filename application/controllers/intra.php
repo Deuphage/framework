@@ -14,7 +14,9 @@ class Intra extends CI_Controller
 				'menu_home'=> $this->lang->line('menu_home'),
 				'menu_profile'=> $this->lang->line('menu_profile'),
 				'menu_newsletter' => $this->lang->line('menu_newsletter'),
-				'menu_admin' => $this->lang->line('menu_admin'),
+				'menu_admin' => $this->lang->line('menu_admin'), // Ne pas afficher si non-administrateur!
+				'menu_forum' => $this->lang->line('menu_forum'),
+				"menu_annuaire" => $this->lang->line('menu_annuaire'),
 				'menu_logout' => $this->lang->line('menu_logout')
 						);
 			if ($this->session->userdata('bind') === false)
@@ -32,6 +34,7 @@ class Intra extends CI_Controller
 			$data['menu_login'] = $this->lang->line('menu_login');
 			$data['menu_newsletter'] = $this->lang->line('menu_newsletter');
 			$data['menu_register'] = $this->lang->line('menu_register');
+			$data['menu_forum'] = $this->lang->line('menu_forum');
 			$this->load->view('acceuil', $data);
 		}
 	}
@@ -431,14 +434,14 @@ class Intra extends CI_Controller
 		    	$data["mobilephone"]=$info[$i]["mobile-phone"][0];
 		    if (isset($info[$i]["birth-date"][0]))
 		    	$data["birthdate"]=$info[$i]["birth-date"][0];
-		    if (isset($info[$i]["picture"][0]))
+		    if (isset($info[$i]["picture:"][0]))
 		    	$data["photo"]=$info[$i]["picture"][0];
 		    if ($this->ldap->check_data($info[$i]["dn"]))
 		    	$this->ldap->add_data($data);
 		}
 
 		#echo "Closing connection";
-		#ldap_close($ds);
+		ldap_close($ds);
 	}
 	public function ldap_reset()
 	{

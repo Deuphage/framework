@@ -6,11 +6,11 @@
 		<title>Intra 42</title>
 		<meta name="generator" content="Bootply" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href=<?php echo '"' . css_url() . 'bootstrap.min.css"'?> rel="stylesheet">
 		<!--[if lt IE 9]>
 			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<link href="../../assets/css/styles.css" rel="stylesheet">
+		<link href=<?php echo '"' . css_url() . 'style.css"'?> rel="stylesheet">
 	</head>
 	<body>
 <div class="navbar navbar-default navbar-static-top">
@@ -30,6 +30,7 @@
         <li><a href="<?php echo site_url('intra/admin')?>"><?php echo $menu_admin;?></a></li>
 	 	<li><a href="<?php echo site_url('intra/email')?>"><?php echo $menu_newsletter;?></a></li>
 	 	<li><a href="<?php echo site_url('intra/annuaire')?>"><?php echo "Annuaire";?></a></li>
+	 	<li><a href="<?php echo site_url('forum')?>"><?php echo $menu_forum;?></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
 	 	<li><a href="<?php echo site_url('intra/logout')?>"><?php echo $menu_logout;?></a></li>

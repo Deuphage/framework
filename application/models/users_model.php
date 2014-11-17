@@ -29,7 +29,7 @@ class Users extends CI_Model
 		$req = $this->db->get('users');
 		if ($req->num_rows() > 0)
 		{
-			foreach ($req->result() as $row) // Are you fcking kidding me??
+			foreach ($req->result() as $row)
 			{
 				if ($login === $row->login)
 					return ($row->status);
@@ -71,19 +71,6 @@ class Users extends CI_Model
       			if ($login === $row->login)
       				return ($row->email);
    			}
-		}
-		else
-		{
-			$this->db->where('uid', $login);
-			$req = $this->db->get('ldap');
-			if ($req->num_rows() > 0)
-			{
-				foreach ($req->result() as $row)
-				{
-					if ($login === $row->uid)
-						return ($row->uid . "@student.42.fr");
-				}
-			}
 		}
 	}
 	public function language_preference($data)

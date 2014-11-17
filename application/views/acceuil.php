@@ -27,6 +27,7 @@
       <ul class="nav navbar-nav">
         <li><a href="<?php echo site_url('intra/main')?>"><?php echo $menu_home ?></a></li>
 	 	<li><a href="<?php echo site_url('intra/email')?>"><?php echo $menu_newsletter ?></a></li>
+	 	<li><a href="<?php echo site_url('forum')?>"><?php echo $menu_forum ?></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="<?php echo site_url('intra/login')?>"><?php echo $menu_login ?></a></li>

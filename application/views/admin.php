@@ -2,7 +2,7 @@
 <html>
 	<meta charset="UTF-8">
 	<head>
-	<link rel="stylesheet" href="<?php echo base_url();?>/assets/css/style.css"/>
+	<link rel="stylesheet" href="<?php echo css_url();?>style.css"/>
 		<title></title>
 	</head>
 	<body><center>
