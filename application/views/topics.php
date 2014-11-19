@@ -10,7 +10,13 @@
 		foreach ($topic_list as $topic)
 		{
 			echo "<p><a href=\"".  site_url('forum/view_topic?tid=' . $topic->id) . "\">" . $topic->title . "</a> ";
-			echo $topic->description . "</p>";
+			echo $topic->description;
+			if (strcmp($topic->login, $this->session->userdata('login')) == 0)
+			{
+				echo "<a href=\"".  site_url('forum/edit_topic?tid=' . $topic->id) . "\">" . " EDIT</a>";
+				echo "<form method='link' action=\"" . site_url('forum/edit_topic?tid=' . $topic->id) . "\"><input type='submit' value='Edit'></form>";
+			}
+			echo "</p>";
 		}
 	?>
 	<?php

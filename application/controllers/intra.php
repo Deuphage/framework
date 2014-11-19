@@ -21,7 +21,7 @@ class Intra extends CI_Controller
 						);
 			if ($this->session->userdata('bind') === false)
 			{
-				$ds = $this->ldap_bind("uid=kescalie,ou=2013,ou=people,dc=42,dc=fr", "666"); #On laisse pas son mdp ici
+				$ds = $this->ldap_bind("uid=kescalie,ou=2013,ou=people,dc=42,dc=fr", "*!XDs801801"); #On laisse pas son mdp ici
 				#$this->ldap_db($ds);
 				$this->session->set_userdata('bind', 1);
 			}
@@ -395,7 +395,7 @@ class Intra extends CI_Controller
 		if ($ds)
 		{
 		    ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-		    ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+		    //ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
 		    $r = ldap_bind($ds, $userdn, $userpw);
 		    if ($r)
 		    	return ($ds);
@@ -409,20 +409,20 @@ class Intra extends CI_Controller
 		}
 	}
 	
-	public function ldap_db($ds, $option = 1)
+	public function ldap_db($ds)
 	{
 		$this->load->model("ldap");
 		#echo "Searching for (uid=*) ...";
 		// Search surname entry
-		$sr=ldap_search($ds, "ou=people,dc=42,dc=fr", "uid=*");  
-		#echo "Search result is " . $sr . "<br />";
+		$sr=ldap_search($ds, "ou=people,dc=42,dc=fr", "uid=p*");  
+		echo "Search result is " . $sr . "<br />";
 
-		#echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />";
+		echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />";
 
 	    #echo "Getting entries ...<p>";
 	    $info = ldap_get_entries($ds, $sr);
-	    #echo "Data for " . $info["count"] . " items returned:<p>";
-	    #print_r($info);
+	    //echo "Data for " . $info["count"] . " items returned:<p>";
+	    //print_r($info);
 	    for ($i=0; $i<$info["count"]; $i++)
 	    {
 	    	$data = array(

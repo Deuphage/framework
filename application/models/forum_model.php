@@ -31,6 +31,18 @@ class Forum_model extends CI_Model
 			return (-1);
 	}
 
+	public function edit_topic($data)
+	{
+		if (is_array($data) === TRUE)
+		{
+			$this->db->where('id', $data['id']);
+			$this->db->update('forum_topics', $data); //Still not checking data here
+			return ($data['tid']);
+		}
+		else
+			return (-1);
+	}
+
 	public function add_message($data)
 	{
 		if (is_array($data) === TRUE)
@@ -39,6 +51,18 @@ class Forum_model extends CI_Model
 			$this->db->where('id', $data['tid']);
 			$update = array('messages' => 'messages + 1');
 			$this->db->update('forum_topics', $update);
+			return (TRUE);
+		}
+		else
+			return (FALSE);
+	}
+
+	public function edit_message($data)
+	{
+		if (is_array($data) === TRUE)
+		{
+			$this->db->where('id', $data['mid']);
+			$this->db->update('forum_messages', $data); // No verifications there, so be careful by checking html form return
 			return (TRUE);
 		}
 		else
