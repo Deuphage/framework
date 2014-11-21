@@ -14,7 +14,10 @@
 			if (strcmp($topic->login, $this->session->userdata('login')) == 0)
 			{
 				echo "<a href=\"".  site_url('forum/edit_topic?tid=' . $topic->id) . "\">" . " EDIT</a>";
-				echo "<form method='link' action=\"" . site_url('forum/edit_topic?tid=' . $topic->id) . "\"><input type='submit' value='Edit'></form>";
+				echo form_open('forum/delete_topic');
+				echo form_hidden('id', $topic->id);
+				echo form_submit('delete_topic', 'delete');
+				echo form_close();
 			}
 			echo "</p>";
 		}

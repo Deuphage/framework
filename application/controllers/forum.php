@@ -76,6 +76,37 @@ class Forum extends CI_Controller
 		redirect("forum/index"); // With an error message, how do you do that?	
 	}
 
+	public function edit_topic()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		$this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean|min_length[5]');
+		$this->form_validation->set_rules('description', 'Description', 'trim|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$data = array(
+				'title'=>$this->input->post('title'),
+				'description'=>$this->input->post('description'),
+				'id'=>$get['tid']
+				);
+			$tid = $this->forum_model->edit_topic($data);
+		
+			redirect("forum/index");
+		}
+		else
+			$this->load->view('topics_edit');
+	}
+
+	public function delete_topic()
+	{
+		$this->form_validation->set_rules('id', 'Topic ID', 'required');
+		if ($this->form_validation->run())
+		{
+			$data['id'] = $this->input->post('id');
+			$this->forum_model->delete_topic($data);
+			redirect("forum/index");
+		}
+	}
+
 	public function create_message() #idem que create topic
 	{
 		$this->form_validation->set_rules('title', 'Title', 'trim|xss_clean');
@@ -91,6 +122,40 @@ class Forum extends CI_Controller
 				);
 			$this->forum_model->add_message($data);
 			redirect("forum/view_topic?tid=" . $data['tid']); #on redirige vers la page du topic du message
+		}
+	}
+
+	public function edit_message()
+	{
+		$get = $this->input->get(NULL, TRUE);
+		$this->form_validation->set_rules('title', 'Title', 'trim|xss_clean');
+		$this->form_validation->set_rules('message', 'Message', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$data = array(
+				'id'=>$get['mid'],
+				'title'=>$this->input->post('title'),
+				'message'=>$this->input->post('message'),
+				'tid'=> $get['tid']
+				);
+			if ($this->forum_model->edit_message($data))
+				print_r($data);
+			redirect("forum/view_topic?tid=" . $data['tid']); #on redirige vers la page du topic du message edite
+		}
+		else
+			$this->load->view('message_edit');
+	}
+
+	public function delete_message()
+	{
+		$this->form_validation->set_rules('id', 'Message ID', 'required');
+		$this->form_validation->set_rules('tid', 'Topic ID', 'required');
+		if ($this->form_validation->run())
+		{
+			$data['id'] = $this->input->post('id');
+			$data['tid'] = $this->input->post('tid');
+			$this->forum_model->delete_message($data);
+			redirect("forum/view_topic?tid=" . $data['tid']);
 		}
 	}
 

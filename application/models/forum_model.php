@@ -43,6 +43,20 @@ class Forum_model extends CI_Model
 			return (-1);
 	}
 
+	public function delete_topic($data)
+	{
+		if (is_array($data) === TRUE)
+		{
+			$this->db->where('tid', $data['id']);
+			$this->db->delete('forum_messages');
+			$this->db->where('id', $data['id']);
+			$this->db->delete('forum_topics');
+			return (TRUE);
+		}
+		else
+			return (-1);
+	}
+
 	public function add_message($data)
 	{
 		if (is_array($data) === TRUE)
@@ -67,6 +81,18 @@ class Forum_model extends CI_Model
 		}
 		else
 			return (FALSE);
+	}
+
+	public function delete_message($data)
+	{
+		if (is_array($data) === TRUE)
+		{
+			$this->db->where('id', $data['id']);
+			$this->db->delete('forum_messages');
+			return (TRUE);
+		}
+		else
+			return (-1);
 	}
 
 	public function list_messages($tid)

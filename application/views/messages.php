@@ -9,11 +9,17 @@
 	{ 
 		foreach ($list_messages as $msg)
 		{
-			echo "<p>" . $msg->login . " said:   " . $msg->message . "</p>";
-			if (strcmp($topic->login, $this->session->userdata('login')) == 0)
+			echo "<p>" . $msg->login . " said:   " . $msg->message;
+			if (strcmp($msg->login, $this->session->userdata('login')) == 0)
 			{
-				echo "<a href=\"".  site_url('forum/edit_message?mid=' . $msg->id . 'tid=' . $msg->tid) . "\">" . " EDIT</a>";
+				echo "<a href=\"".  site_url('forum/edit_message?mid=' . $msg->id . '&tid=' . $msg->tid) . "\">" . " EDIT</a>";
+				echo form_open('forum/delete_message');
+				echo form_hidden('id', $msg->id);
+				echo form_hidden('tid', $msg->tid);
+				echo form_submit('delete_msg', 'delete');
+				echo form_close();
 			}
+			echo "</p>";
 		}
 	}
 	if ($this->session->userdata('online') && $this->session->userdata('login'))
