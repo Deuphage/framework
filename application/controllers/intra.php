@@ -128,7 +128,7 @@ class Intra extends CI_Controller
 				'pass'=>sha1($this->input->post('pass')),
 				'first_name'=>$this->input->post('first_name'),
 				'surname'=>$this->input->post('surname'),
-				'sex'=>$this->input->post('sex'),
+				'gender'=>$this->input->post('gender'),
 				'avatar'=>$this->input->post('avatar'));
 			
 			$data3['title_success_register'] = $this->lang->line('title_success_register');
@@ -296,8 +296,7 @@ class Intra extends CI_Controller
 		}
 		else
 		{
-			$this->load->view(
-				'profile');
+			$this->load->view('profile');
 		}
 	}
 	public function admin_form()
@@ -306,18 +305,30 @@ class Intra extends CI_Controller
 		$this->load->model('admin');
 		$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('action', 'Action', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|xss_clean');
 		if ($this->form_validation->run())
 		{
 			$data = array(
 				'login'=>$this->input->post('login'),
+				'login2'=>$this->input->post('login2'),
+				'first_name'=>$this->input->post('first_name'),
+				'email'=>$this->input->post('email'),
+				'gender'=>$this->input->post('gender'),
 				'status'=>$this->input->post('status'),
 				'status_target'=>$this->users->check_permission($this->input->post('login')),
 				'status_admin'=>$this->users->check_permission($this->session->userdata('login'))
 						);
+			if ($this->input->post('pass'))
+				$data['pass'] = sha1($this->input->post('pass'));
 			if ($this->input->post('action') === 'delete')
 				$this->admin->delete_user($data);
 			else if ($this->input->post('action') === 'modify')
 				$this->admin->update_info($data);
+			else if ($this->input->post('action') === 'create')
+				{
+					if (!($this->admin->create_user($data)))
+						redirect('intra/admin');
+				}	
 			else
 			{
 				$profile = $this->users->user_info($data['login']);

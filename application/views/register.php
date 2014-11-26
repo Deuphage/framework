@@ -25,8 +25,8 @@
 	 <h5><?php echo $form_surname?></h5>
 	 <input type="text" name="surname" value="<?php echo set_value('surname');?>"/><br>
 	 <h5><?php echo $form_gender?></h5>
-	 <input type="radio" name="sex" value="1"><img src="../../assets/male_knight.jpg" alt="male knight">
-	 <input type="radio" name="sex" value="0"><img src="../../assets/female_angel.jpg" alt="female angel">
+	 <input type="radio" name="gender" value="1"><img src="../../assets/male_knight.jpg" alt="male knight">
+	 <input type="radio" name="gender" value="0"><img src="../../assets/female_angel.jpg" alt="female angel">
 	 <h5><?php echo $form_email?></h5>
 	 <input type="text" name="email" value="<?php echo set_value('email');?>"/><br>
 	 <h5><?php echo $form_avatar?></h5>

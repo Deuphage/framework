@@ -1,0 +1,157 @@
+55c55
+< 			$this->logs->add_log($log);
+---
+> 			$this->logs_model->add_log($log);
+69c69
+< 			$this->logs->add_log($log);
+---
+> 			$this->logs_model->add_log($log);
+78c78
+< 		$this->load->model('users');
+---
+> 		$this->load->model('users_model');
+91c91
+< 			'user_list'=>$this->users->user_list()
+---
+> 			'user_list'=>$this->users_model->user_list()
+93c93
+< 		if ($this->users->check_permission($this->session->userdata('login')) > 0)
+---
+> 		if ($this->users_model->check_permission($this->session->userdata('login')) > 0)
+102c102
+< 				$this->logs->add_log($log);
+---
+> 				$this->logs_model->add_log($log);
+115,116c115,116
+< 		$this->load->model('register');
+< 		$this->load->model('users');
+---
+> 		$this->load->model('register_model');
+> 		$this->load->model('users_model');
+123c123
+< 		if ($this->form_validation->run() && $this->users->check_login($this->input->post('login')))
+---
+> 		if ($this->form_validation->run() && $this->users_model->check_login($this->input->post('login')))
+135c135
+< 			$this->register->reg_user($data);
+---
+> 			$this->register_model->reg_user($data);
+141c141
+< 			$this->logs->add_log($log);
+---
+> 			$this->logs_model->add_log($log);
+165c165
+< 		$this->load->model('users');
+---
+> 		$this->load->model('users_model');
+171c171
+< 		if ($this->form_validation->run() && $this->users->aut_login($this->input->post('login'), $this->input->post('pass')))
+---
+> 		if ($this->form_validation->run() && $this->users_model->aut_login($this->input->post('login'), $this->input->post('pass')))
+173c173
+< 			$info = $this->users->user_info($this->input->post('login'));
+---
+> 			$info = $this->users_model->user_info($this->input->post('login'));
+185c185
+< 			$this->logs->add_log($log);
+---
+> 			$this->logs_model->add_log($log);
+221c221
+< 					$this->logs->add_log($log);
+---
+> 					$this->logs_model->add_log($log);
+239c239
+< 		$this->load->model('users');
+---
+> 		$this->load->model('users_model');
+248,249c248,249
+< 		$this->logs->add_log($log);
+< 		$this->users->language_preference($data);
+---
+> 		$this->logs_model->add_log($log);
+> 		$this->users_model->language_preference($data);
+259c259
+< 		$this->load->model('users');
+---
+> 		$this->load->model('users_model');
+276c276
+< 			$this->logs->add_log($log);
+---
+> 			$this->logs_model->add_log($log);
+282,283c282,283
+< 		$this->load->model('register');
+< 		$this->load->model('users');
+---
+> 		$this->load->model('register_model');
+> 		$this->load->model('users_model');
+289c289
+< 		if ($this->form_validation->run() && $this->users->check_login($this->input->post('login'), $this->input->post('old_pass')))
+---
+> 		if ($this->form_validation->run() && $this->users_model->check_login($this->input->post('login'), $this->input->post('old_pass')))
+294c294
+< 				$this->register->reg_user($data);
+---
+> 				$this->register_model->reg_user($data);
+299,300c299
+< 			$this->load->view(
+< 				'profile');
+---
+> 			$this->load->view('profile');
+305,306c304,305
+< 		$this->load->model('users');
+< 		$this->load->model('admin');
+---
+> 		$this->load->model('users_model');
+> 		$this->load->model('admin_model');
+314,315c313,314
+< 				'status_target'=>$this->users->check_permission($this->input->post('login')),
+< 				'status_admin'=>$this->users->check_permission($this->session->userdata('login'))
+---
+> 				'status_target'=>$this->users_model->check_permission($this->input->post('login')),
+> 				'status_admin'=>$this->users_model->check_permission($this->session->userdata('login'))
+318c317
+< 				$this->admin->delete_user($data);
+---
+> 				$this->admin_model->delete_user($data);
+320c319
+< 				$this->admin->update_info($data);
+---
+> 				$this->admin_model->update_info($data);
+323c322
+< 				$profile = $this->users->user_info($data['login']);
+---
+> 				$profile = $this->users_model->user_info($data['login']);
+344,345c343,344
+< 		$this->load->model('users');
+< 		$email = $this->users->get_email_users($this->session->userdata('login'));
+---
+> 		$this->load->model('users_model');
+> 		$email = $this->users_model->get_email_users($this->session->userdata('login'));
+374c373
+<         $config["total_rows"] = $this->logs->count_log();
+---
+>         $config["total_rows"] = $this->logs_model->count_log();
+382c381
+< 		$data['results'] = $this->logs->read_log($config['per_page'], $page);
+---
+> 		$data['results'] = $this->logs_model->read_log($config['per_page'], $page);
+398c397
+< 		    //ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+---
+> 		    ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+414c413
+< 		$this->load->model("ldap");
+---
+> 		$this->load->model('ldap_model');
+439,440c438,439
+< 		    if ($this->ldap->check_data($info[$i]["dn"]))
+< 		    	$this->ldap->add_data($data);
+---
+> 		    if ($this->ldap_model->check_data($info[$i]["dn"]))
+> 		    	$this->ldap_model->add_data($data);
+453,454c452,453
+< 		$this->load->model('ldap');
+< 		$data['ldap_list'] = $this->ldap->ldap_list();
+---
+> 		$this->load->model('ldap_model');
+> 		$data['ldap_list'] = $this->ldap_model->ldap_list();
