@@ -36,7 +36,7 @@ class Admin extends CI_Model
 				'gender'=>$data['gender'],
 				'pass'=>$data['pass']
 			);
-		if ($creation['pass'] === NULL)
+		if (!($creation['pass']))
 			{
 				echo "This user need a password !";
 				return (false) ;
@@ -46,7 +46,9 @@ class Admin extends CI_Model
 		else
 			$creation['login'] = $data['login'];
 		$this->db->insert('users', $creation);
+		return (true);
 	}
+
 	public function delete_user($data)
 	{
 		$this->db->where('login', $data['login']);

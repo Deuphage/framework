@@ -32,7 +32,6 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="<?php echo site_url('intra/login')?>"><?php echo $menu_login ?></a></li>
 	 	<li><a href="<?php echo site_url('intra/register')?>"><?php echo $menu_register ?></a></li>
-	 	<li><a href="<?php echo site_url('intra/ldap_bind')?>"><?php echo "ldap" ?></a></li>
 	  </ul>
     </div><!--/.nav-collapse -->
   </div>

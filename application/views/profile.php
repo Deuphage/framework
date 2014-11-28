@@ -27,8 +27,31 @@
 	 <input type="password" name="old_pass"><br>
 	 <h5><?php echo $form_email?>:</h5>
 	 <input type="text" name="email" value="<?php echo 'coucou';?>"><br>
-	 <h4><input type="submit" value="<?php echo $form_action_modify ?>"></h3>
+	 <h4><input type="submit" value="<?php echo $form_action_modify ?>"></h4>
 	 </fieldset>
+	 <?php echo form_close();?>
+
+	 <!-- Partie gestion ticket utilisateur -->
+	 <legend><?php echo "Tickets" ?>:</legend>
+	<?php
+		if ($list_ticket != FALSE)
+		{ 
+			foreach ($list_ticket as $ticket)
+			{
+				if (strcmp($ticket->login, $this->session->userdata('login')) == 0)
+				{
+					echo "#".$ticket->id . " " . $ticket->title . "  " . $ticket->priority;
+					if ($ticket->open == 1)
+						echo " open <br>";
+					else
+						echo " closed <br>";
+				}
+			}
+		}
+	?>
+	 
+	 <?php echo form_open('dashboard/new_ticket', array('method'=>'link')); ?>
+	 <h4><input type="submit" value="<?php echo "New ticket" ?>"></h4>
 	 <?php echo form_close();?>
 	 </div>
 

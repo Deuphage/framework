@@ -10,6 +10,7 @@
 		<div class="text-center">
     		<h1><?php echo $title_panel?></h1>
 	 		<p class="lead">
+	 		<!-- Partie gestion utilisateur -->
 	 		<?php echo form_open('intra/admin_form');?>
 				<h5><?php echo $form_username?></h5>
 				<select name="login">
@@ -44,11 +45,48 @@
 				<h3><input type="submit" value="<?php echo $form_control;?>"></h3>
 			</form>
 			</p>
-			<a href="<?php echo site_url('intra/logger')?>"><?php echo "Logs" ;?></a>
-		<?php echo form_open('intra/ldap_reset');?>
+
+			<?php echo form_open('intra/logger', array('method'=>'link')); ?>
+	 			<h4><input type="submit" value="<?php echo "Logs" ?>"></h4>
+	 		<?php echo form_close();?>
+				<!-- Partie ticket -->
+			<legend><?php echo "Tickets" ?>:</legend>
+			<?php
+			if ($list_ticket != FALSE)
+			{
+				foreach ($list_ticket as $ticket)
+				{
+					if ($ticket->open == 1)
+					{
+						echo form_open('dashboard/view_ticket');
+						echo form_hidden('id', $ticket->id);
+						echo "#".$ticket->id . " | " . $ticket->login . " | " . $ticket->title . "  " . $ticket->priority . " | " . $ticket->admin;
+						echo form_submit('go', 'Go');
+						echo form_close();
+						echo " open "; //bouton pour fermer
+						$data = array();
+						foreach($admin_list as $login)
+						{
+							$data[$login] = $login;
+						}
+						echo form_dropdown('admin', $data, $ticket->admin) . "<br>"; //Liste de l'admin qui s'occupe du ticket
+					}
+					else
+					{
+						echo "#".$ticket->id . " | " . $ticket->login . " | " . $ticket->title . "  " . $ticket->priority . " | " . $ticket->admin;
+						echo " closed <br>"; //bouton pour ouvrir
+						echo form_open('dashboard/open_ticket');
+						echo form_hidden('id', $ticket->id);
+						echo form_submit('open', 'Open');
+						echo form_close();
+					}
+				}
+			}
+			?>
+			<?php echo form_open('intra/ldap_reset');?>
 			<button type="submit">Reset LDAP</button>
 		</form>
-  </div>
+  	</div>
 </center>
 
 	</body>

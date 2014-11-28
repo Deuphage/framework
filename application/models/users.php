@@ -47,6 +47,17 @@ class Users extends CI_Model
 		natsort($tab);
 		return ($tab);
 	}
+	public function admin_list()
+	{
+		$tab = array();
+		$this->db->where('status >', 0);
+		$req = $this->db->get('users');
+		foreach ($req->result() as $row)
+			$tab[] = $row->login;
+		natsort($tab);
+		return ($tab);
+	}
+
 	public function user_info($login)
 	{
 		$this->db->where('login', $login);

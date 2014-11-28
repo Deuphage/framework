@@ -21,9 +21,9 @@ class Intra extends CI_Controller
 						);
 			if ($this->session->userdata('bind') === false)
 			{
-				$ds = $this->ldap_bind("uid=kescalie,ou=2013,ou=people,dc=42,dc=fr", "*!XDs801801"); #On laisse pas son mdp ici
-				#$this->ldap_db($ds);
-				$this->session->set_userdata('bind', 1);
+				$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
+				$this->ldap_db($ds);
+				$this->session->set_userdata('bind', TRUE);
 			}
 			$this->load->view('perso', $data);
 		}
@@ -73,6 +73,7 @@ class Intra extends CI_Controller
 	}
 	public function admin()
 	{
+		$this->load->model('dashboard_model');
 		$this->lang->load('form', $this->session->userdata('language'));
 		$this->lang->load('title', $this->session->userdata('language'));
 		$this->load->model('users');
@@ -88,7 +89,9 @@ class Intra extends CI_Controller
 			'form_action_modify'=>$this->lang->line('form_action_modify'),
 			'form_action_delete'=>$this->lang->line('form_action_delete'),
 			'form_control'=>$this->lang->line('form_control'),
-			'user_list'=>$this->users->user_list()
+			'user_list'=>$this->users->user_list(),
+			'admin_list'=>$this->users->admin_list(),
+			'list_ticket'=>$this->dashboard_model->list_tickets()
 					);
 		if ($this->users->check_permission($this->session->userdata('login')) > 0)
 		{
@@ -168,42 +171,37 @@ class Intra extends CI_Controller
 		$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('pass', 'Password', 'trim|required|xss_clean');
 
-		if ($this->form_validation->run() && $this->users->aut_login($this->input->post('login'), $this->input->post('pass')))
+		if ($this->form_validation->run())
 		{
-			$info = $this->users->user_info($this->input->post('login'));
-			$data = array(
-					'login'=>$info->login,
-					'online'=>true,
-					'status'=> $info->status,
-					'language'=>$info->language
-						);
-			$this->session->set_userdata($data);
-			$log = array(
-				'login'=>$info->login,
-				'action'=>"login"
-						);
-			$this->logs->add_log($log);
-			redirect('intra/main');
-		}
-		else if ($this->form_validation->run())
-		{
-			$server = "ldap://ldap.42.fr";
-			$port = "636";
-			$userdn = "uid=". $this->input->post('login') . ",ou=2013,ou=people,dc=42,dc=fr";
-			$userpw = $this->input->post('pass');
-			$ds=ldap_connect($server, $port);
-			if ($ds)
+			if ($this->users->aut_login($this->input->post('login'), $this->input->post('pass')))
 			{
-		        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-		    	ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
-		    	$r = ldap_bind($ds, $userdn, $userpw);
-		    	if (!$r)
-		    	{
-		    		$data2 = array(
-						'form_username'=>$this->lang->line('form_username'),
-						'form_password'=>$this->lang->line('form_password'),
-						'menu_login'=>$this->lang->line('menu_login')
-						);
+				$info = $this->users->user_info($this->input->post('login'));
+				$data = array(
+						'login'=>$info->login,
+						'online'=>true,
+						'status'=> $info->status,
+						'language'=>$info->language
+							);
+				$this->session->set_userdata($data);
+				$log = array(
+					'login'=>$info->login,
+					'action'=>"login"
+							);
+				$this->logs->add_log($log);
+				redirect('intra/main');
+			}
+			else
+			{
+				$ds=ldap_connect('ldap://ldap.42.fr', '636');
+				$user = ldap_search($ds, 'ou=people,dc=42,dc=fr', 'uid='. $this->input->post('login'));
+				$user = ldap_get_entries($ds, $user);
+				if ($this->ldap_bind($user[0]['uid'][0], $this->input->post('pass')) === FALSE)
+				{
+					$data2 = array(
+					'form_username'=>$this->lang->line('form_username'),
+					'form_password'=>$this->lang->line('form_password'),
+					'menu_login'=>$this->lang->line('menu_login')
+					);
 					$this->load->view('login', $data2);
 				}
 		    	else
@@ -221,8 +219,8 @@ class Intra extends CI_Controller
 					$this->logs->add_log($log);
 					redirect('intra/main');
 		    	}
-			}
 			
+			}
 		}
 		else
 		{
@@ -257,6 +255,7 @@ class Intra extends CI_Controller
 	public function profile()
 	{
 		$this->load->model('users');
+		$this->load->model('dashboard_model');
 		$this->lang->load('form', $this->session->userdata('language'));
 		$data = array(
 			'form_username'=>$this->lang->line('form_username'),
@@ -264,7 +263,8 @@ class Intra extends CI_Controller
 			'form_password'=>$this->lang->line('form_password'),
 			'form_email'=>$this->lang->line('form_email'),
 			'form_action_modify'=>$this->lang->line('form_action_modify'),
-			'form_perso_info'=>$this->lang->line('form_perso_info')
+			'form_perso_info'=>$this->lang->line('form_perso_info'),
+			'list_ticket'=>$this->dashboard_model->list_tickets()
 			);
 		if ($this->session->userdata('login'))
 		{
@@ -396,61 +396,61 @@ class Intra extends CI_Controller
 		$this->load->view('logger', $data);
 	}
 
-	public function ldap_bind($userdn, $userpw)
+	public function ldap_bind($uid, $pswd)
 	{
 		$server = "ldap://ldap.42.fr";
 		$port = "636";
-		
 		$ds=ldap_connect($server, $port);
-		
+
 		if ($ds)
 		{
-		    ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-		    //ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
-		    $r = ldap_bind($ds, $userdn, $userpw);
-		    if ($r)
-		    	return ($ds);
-		    else
-		    	$this->load->view('ldap_error');
-		    echo "Bind result is " . $r . "<br />";
+			if (($user = ldap_search($ds, 'ou=people,dc=42,dc=fr', 'uid=' . $uid)) != FALSE)
+			{
+				$user = ldap_get_entries($ds, $user);
+				if ($user['count'] > 0)
+				{
+		    		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+		    		if (ldap_bind($ds, $user[0]['dn'], $pswd) === TRUE)
+		    			return ($ds);
+		    		else
+		    			$this->load->view('ldap_error');
+		    	}
+		    }
 		}
 		else 
-		{
 		    $this->load->view('ldap_error');
-		}
+		return (FALSE);
 	}
 	
 	public function ldap_db($ds)
 	{
 		$this->load->model("ldap");
-		#echo "Searching for (uid=*) ...";
-		// Search surname entry
-		$sr=ldap_search($ds, "ou=people,dc=42,dc=fr", "uid=p*");  
-		echo "Search result is " . $sr . "<br />";
-
-		echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />";
-
-	    #echo "Getting entries ...<p>";
-	    $info = ldap_get_entries($ds, $sr);
-	    //echo "Data for " . $info["count"] . " items returned:<p>";
-	    //print_r($info);
-	    for ($i=0; $i<$info["count"]; $i++)
-	    {
-	    	$data = array(
-		    	"dn"=>$info[$i]["dn"],
-		    	"cn"=>$info[$i]["cn"][0],
-		    	"uid"=>$info[$i]["uid"][0]
-		    	);
-		   	if (isset($info[$i]["mobile-phone"][0]))
-		    	$data["mobilephone"]=$info[$i]["mobile-phone"][0];
-		    if (isset($info[$i]["birth-date"][0]))
-		    	$data["birthdate"]=$info[$i]["birth-date"][0];
-		    if (isset($info[$i]["picture:"][0]))
-		    	$data["photo"]=$info[$i]["picture"][0];
-		    if ($this->ldap->check_data($info[$i]["dn"]))
-		    	$this->ldap->add_data($data);
+		for ($first_char = 'a';$first_char <= 'z';$first_char++)
+		{
+			$sr=ldap_search($ds, "ou=people,dc=42,dc=fr", "uid=$first_char*");  
+	    	$info = ldap_get_entries($ds, $sr);
+	    	if ($info == FALSE)
+	    	{
+	    		echo "NOPE\n";die;//debug
+	    	}
+	    	for ($i=0; $i<$info["count"]; $i++)
+	    	{
+	    		$data = array(
+			    	"dn"=>$info[$i]["dn"],
+			    	"cn"=>$info[$i]["cn"][0],
+			    	"uid"=>$info[$i]["uid"][0],
+			    	"mobilephone"=>0
+			    	);
+			   	if (isset($info[$i]["mobile"][0]))
+			    	$data["mobilephone"]=$info[$i]["mobile"][0];
+			    if (isset($info[$i]["birth-date"][0]))
+			    	$data["birthdate"]=$info[$i]["birth-date"][0];
+			    if (isset($info[$i]["jpegPhoto"][0]))
+			    	$data["photo"]=$info[$i]["jpegPhoto"][0];
+			    if ($this->ldap->check_data($info[$i]["dn"]))
+			    	$this->ldap->add_data($data);
+			}
 		}
-
 		#echo "Closing connection";
 		ldap_close($ds);
 	}
