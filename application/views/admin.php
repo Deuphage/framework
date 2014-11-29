@@ -61,15 +61,19 @@
 						echo form_open('dashboard/view_ticket');
 						echo form_hidden('id', $ticket->id);
 						echo "#".$ticket->id . " | " . $ticket->login . " | " . $ticket->title . "  " . $ticket->priority . " | " . $ticket->admin;
-						echo form_submit('go', 'Go');
+						echo form_submit('go', 'Go'). "<br>";
 						echo form_close();
-						echo " open "; //bouton pour fermer
+						echo " open </form>"; //bouton pour fermer
 						$data = array();
 						foreach($admin_list as $login)
 						{
 							$data[$login] = $login;
 						}
-						echo form_dropdown('admin', $data, $ticket->admin) . "<br>"; //Liste de l'admin qui s'occupe du ticket
+						echo form_open('dashboard/assign_ticket');
+						echo form_hidden('id', $ticket->id);
+						echo form_dropdown('admin', $data, $ticket->admin); //Liste de l'admin qui s'occupe du ticket
+						echo form_submit('assign admin', 'assign'). "</form><br>";
+						echo form_close();
 					}
 					else
 					{

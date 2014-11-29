@@ -102,23 +102,7 @@ class Dashboard extends CI_Controller
 			$data['id'] = $this->input->post('tid');
 			$this->dashboard_model->close_ticket($data); //On close le ticket ici.
 
-			$data2 = array(
-			'title_admin'=>$this->lang->line('title_admin'), // c'est le gros bordel l'internationalisation.
-			'title_panel'=>$this->lang->line('title_panel'),
-			'form_username'=>$this->lang->line('form_username'),
-			'form_status'=>$this->lang->line('form_status'),
-			'form_mere_mortal'=>$this->lang->line('form_mere_mortal'),
-			'form_all_powerful'=>$this->lang->line('form_all_powerful'),
-			'form_action'=>$this->lang->line('form_action'),
-			'form_action_read'=>$this->lang->line('form_action_read'),
-			'form_action_modify'=>$this->lang->line('form_action_modify'),
-			'form_action_delete'=>$this->lang->line('form_action_delete'),
-			'form_control'=>$this->lang->line('form_control'),
-			'user_list'=>$this->users->user_list(),
-			'admin_list'=>$this->users->admin_list(),
-			'list_ticket'=>$this->dashboard_model->list_tickets()
-					);
-			$this->load->view('admin', $data2);
+			redirect('intra/admin');
 		}
 	}
 	public function open_ticket()
@@ -134,23 +118,25 @@ class Dashboard extends CI_Controller
 			$data['id'] = $this->input->post('id');
 			$this->dashboard_model->open_ticket($data);
 
-			$data2 = array(
-				'title_admin'=>$this->lang->line('title_admin'), // c'est le gros bordel l'internationalisation.
-				'title_panel'=>$this->lang->line('title_panel'),
-				'form_username'=>$this->lang->line('form_username'),
-				'form_status'=>$this->lang->line('form_status'),
-				'form_mere_mortal'=>$this->lang->line('form_mere_mortal'),
-				'form_all_powerful'=>$this->lang->line('form_all_powerful'),
-				'form_action'=>$this->lang->line('form_action'),
-				'form_action_read'=>$this->lang->line('form_action_read'),
-				'form_action_modify'=>$this->lang->line('form_action_modify'),
-				'form_action_delete'=>$this->lang->line('form_action_delete'),
-				'form_control'=>$this->lang->line('form_control'),
-				'user_list'=>$this->users->user_list(),
-				'admin_list'=>$this->users->admin_list(),
-				'list_ticket'=>$this->dashboard_model->list_tickets()
-					);
-			$this->load->view('admin', $data2);
+			if ($this->session->userdata('userdata') > 0)
+				redirect('intra/admin');
+			else
+				redirect('intra/profile');
+		}
+	}
+	public function assign_ticket()
+	{
+		$this->load->model('dashboard_model');
+		$this->form_validation->set_rules('admin', 'Admin', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('id', 'Ticket ID', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$data = array(
+				'admin'=>$this->input->post('admin'),
+				'id'=>$this->input->post('id')
+				);
+			$this->dashboard_model->assign_ticket($data);
+			redirect('intra/admin');
 		}
 	}
 }

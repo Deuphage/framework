@@ -46,6 +46,11 @@ class Dashboard_model extends CI_Model
 		$this->db->where('id', $data['id']);
 		$this->db->update('tickets', array('open'=>1));
 	}
+	public function assign_ticket($data)
+	{
+		$this->db->where('id', $data['id']);
+		$this->db->update('tickets', $data);
+	}
 }
 
 ?>

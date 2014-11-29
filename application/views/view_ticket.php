@@ -20,7 +20,7 @@
 			echo "Message:<br> " . form_textarea(array('name'=>'message', 'rows'=> 3, 'cols'=> 25)) . "<br>";
 			echo form_submit('new_message', 'Reply');
 			echo form_close();
-			if ($info_ticket[0]->open == 1)
+			if ($info_ticket[0]->open == 1 && $this->session->userdata('status') > 0)
 			{
 				echo form_open('dashboard/close_ticket');
 				echo form_hidden('tid', $info_ticket[0]->id);

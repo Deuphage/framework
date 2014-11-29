@@ -44,7 +44,16 @@
 					if ($ticket->open == 1)
 						echo " open <br>";
 					else
+					{
 						echo " closed <br>";
+						echo form_open('dashboard/open_ticket');
+						echo form_hidden('id', $ticket->id);
+						echo form_submit('open', 'Open');
+						echo form_close();
+					}
+					echo form_open('dashboard/view_ticket');
+					echo form_hidden('id', $ticket->id);
+					echo form_submit('go', 'Go'). "<br>";
 				}
 			}
 		}
