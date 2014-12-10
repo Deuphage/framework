@@ -2,9 +2,38 @@
 
 class Intra extends CI_Controller
 {
+	
+
 	public function __construct()
 	{
 		parent::__construct();
+		#Si on a les bonnes variables, on test l'autologin. Ne marche que sur la page main (en theorie)
+		if ($_GET['token'] && $_GET['timeout'] > time()) #check la validité du lien
+		{
+			$this->load->model('users');
+			$privateKey = "801*)!d7vw9w5clp12l;0smva90a@@<ksvoa"; #security key
+			$hash = hash('sha256', $privateKey . site_url('intra/main') . $_GET['name'] . $_GET['timeout']);
+			if (strcmp($_GET['token'], $hash) === 0)
+			{
+				$info = $this->users->user_info($_GET['name']);
+				$data = array(
+					'login'=>$info->login,
+					'online'=>true,
+					'status'=> $info->status,
+					'language'=>$info->language
+							);
+				$this->session->set_userdata($data);
+			}
+			else
+			{
+				echo "Compare error";
+			}
+		}
+		else
+		{	
+			if ($_GET['token'])
+				echo "Link timeout";
+		}
 		if ($this->session->userdata('online') && $this->session->userdata('login'))
 		{
 			$this->lang->load('menu', $this->session->userdata('language'));
@@ -21,8 +50,7 @@ class Intra extends CI_Controller
 						);
 			if ($this->session->userdata('bind') === false)
 			{
-				$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
-				$this->ldap_db($ds);
+				$this->ldap_bind('Toimoinous', ''); #On laisse pas son mdp ici
 				$this->session->set_userdata('bind', TRUE);
 			}
 			$this->load->view('perso', $data);
@@ -266,6 +294,12 @@ class Intra extends CI_Controller
 			'form_perso_info'=>$this->lang->line('form_perso_info'),
 			'list_ticket'=>$this->dashboard_model->list_tickets()
 			);
+		$this->form_validation->set_rules('login', 'Login', 'trim|required|xss_clean');
+    	$this->form_validation->set_rules('submit', 'Submit', 'trim|required|xss_clean');
+    	if ($this->form_validation->run())
+    	{
+    		$data['autolog'] = $this->create_url();
+    	}
 		if ($this->session->userdata('login'))
 		{
 			$log = array(
@@ -275,7 +309,10 @@ class Intra extends CI_Controller
 			);
 			$this->logs->add_log($log);
 		}
-		$this->load->view('profile', $data);
+		if ($this->session->userdata('login') && $this->session->userdata('online'))
+			$this->load->view('profile', $data);
+		else
+			redirect('intra/login');
 	}
 	public function change_profile()
 	{
@@ -454,10 +491,16 @@ class Intra extends CI_Controller
 		#echo "Closing connection";
 		ldap_close($ds);
 	}
+
 	public function ldap_reset()
 	{
 		$this->session->unset_userdata('bind');
 		redirect('intra/admin');
+	}
+	public function load_ldap()
+	{
+		$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
+		$this->ldap_db($ds);
 	}
 	public function annuaire()
 	{
@@ -501,6 +544,21 @@ class Intra extends CI_Controller
 
 	    return $new_array;
 	}
+	
+	public function create_url()
+	{
+    		$privateKey = "801*)!d7vw9w5clp12l;0smva90a@@<ksvoa"; #security key
+			$timeout = time() + (24 * 60 * 60); #Url validiy / Tomorrow is easy
+			$url = site_url('intra/main'); #url target
+			$hash = hash('sha256', $privateKey . $url . $this->session->userdata('login') . $timeout);
+        	$autoLoginUrl = http_build_query(array(
+        		'name' => $this->session->userdata('login'),
+        		'timeout' => $timeout,
+        		'token' => $hash
+        		));
+        		return ($url.'?'.$autoLoginUrl);
+	}
+
 }
 
 ?>

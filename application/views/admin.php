@@ -45,7 +45,7 @@
 				<h3><input type="submit" value="<?php echo $form_control;?>"></h3>
 			</form>
 			</p>
-
+				<!-- Logger -->
 			<?php echo form_open('intra/logger', array('method'=>'link')); ?>
 	 			<h4><input type="submit" value="<?php echo "Logs" ?>"></h4>
 	 		<?php echo form_close();?>
@@ -87,8 +87,11 @@
 				}
 			}
 			?>
-			<?php echo form_open('intra/ldap_reset');?>
-			<button type="submit">Reset LDAP</button>
+			<?php echo form_open('intra/ldap_reset', array('method'=>'link'));?>
+			<input type="submit">Reset LDAP</button>
+			<?php echo form_close() ?>
+			<?php echo form_open('intra/load_ldap', array('method'=>'link'));?>
+			<input type="submit" name="Load LDAP" value="Load LDAP"/>Load LDAP</>
 		</form>
   	</div>
 </center>

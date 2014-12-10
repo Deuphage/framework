@@ -118,7 +118,7 @@ class Dashboard extends CI_Controller
 			$data['id'] = $this->input->post('id');
 			$this->dashboard_model->open_ticket($data);
 
-			if ($this->session->userdata('userdata') > 0)
+			if ($this->session->userdata('status') > 0)
 				redirect('intra/admin');
 			else
 				redirect('intra/profile');

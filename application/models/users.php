@@ -21,7 +21,24 @@ class Users extends CI_Model
 			return (true);
 		}
 		else
+		{
 			echo 'Login already used';
+			return (false);
+		}
+	}
+	public function check_login_ldap($login)
+	{
+		$this->db->where('uid', $login);
+		$req = $this->db->get('ldap');
+		if ($req->num_rows() == 0)
+		{
+			return (true);
+		}
+		else
+		{
+			echo 'Login already used';
+			return (false);
+		}
 	}
 	public function check_permission($login)
 	{

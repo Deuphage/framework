@@ -16,7 +16,7 @@
 <div class="container">
 	 <?php echo validation_errors();?>
 	 <div class="text-center">
-	 <?php echo form_open('intra/change_profile'); ?>
+<!-- 	 <?php echo form_open('intra/change_profile'); ?> -->
 	 <fieldset>
 	 <legend><?php echo $form_perso_info ?>:</legend>
 	 <h5><?php echo $form_username?>:</h5>
@@ -30,6 +30,14 @@
 	 <h4><input type="submit" value="<?php echo $form_action_modify ?>"></h4>
 	 </fieldset>
 	 <?php echo form_close();?>
+
+	<!-- Partie autolog -->
+	<legend><?php echo "Autologin" ?>:</legend>
+	<input type="text" name="autolog" value="<?php echo $autolog;?>">
+	<?php echo form_open('intra/profile'); 
+	echo form_hidden('login', $this->session->userdata('login')); ?>
+	<input type="submit" name="submit" value="Generate Autologin Link"><br>
+	<?php echo form_close();?>
 
 	 <!-- Partie gestion ticket utilisateur -->
 	 <legend><?php echo "Tickets" ?>:</legend>
