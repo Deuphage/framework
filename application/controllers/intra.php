@@ -499,8 +499,9 @@ class Intra extends CI_Controller
 	}
 	public function load_ldap()
 	{
-		$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
+		$ds = $this->ldap_bind('toimoinous', ''); #On laisse pas son mdp ici
 		$this->ldap_db($ds);
+		redirect('intra/admin');
 	}
 	public function annuaire()
 	{

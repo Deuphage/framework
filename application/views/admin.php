@@ -88,10 +88,10 @@
 			}
 			?>
 			<?php echo form_open('intra/ldap_reset', array('method'=>'link'));?>
-			<input type="submit">Reset LDAP</button>
+			<input type="submit" value="Reset LDAP">
 			<?php echo form_close() ?>
 			<?php echo form_open('intra/load_ldap', array('method'=>'link'));?>
-			<input type="submit" name="Load LDAP" value="Load LDAP"/>Load LDAP</>
+			<input type="submit" name="Load LDAP" value="Load LDAP"/>
 		</form>
   	</div>
 </center>
