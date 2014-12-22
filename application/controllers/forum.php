@@ -5,31 +5,26 @@ class Forum extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->lang->load('menu', $this->session->userdata('language'));
 		if ($this->session->userdata('online') && $this->session->userdata('login'))
 		{
-			$this->lang->load('menu', $this->session->userdata('language'));
 			$this->lang->load('title', $this->session->userdata('language'));
 			$data = array(
-				'title_welcome' => $this->lang->line('title_welcome'),
-				'menu_home'=> $this->lang->line('menu_home'),
-				'menu_profile'=> $this->lang->line('menu_profile'),
-				'menu_newsletter' => $this->lang->line('menu_newsletter'),
-				'menu_admin' => $this->lang->line('menu_admin'), // Ne pas afficher si non-administrateur!
-				'menu_forum' => $this->lang->line('menu_forum'),
-				"menu_annuaire" => $this->lang->line('menu_annuaire'),
-				'menu_logout' => $this->lang->line('menu_logout')
+				"title_welcome"		=> $this->lang->line('title_welcome'),
+				"menu_home"			=> $this->lang->line('menu_home'),
+				"menu_profile"		=> $this->lang->line('menu_profile'),
+				"menu_newsletter"	=> $this->lang->line('menu_newsletter'),
+				"menu_forum"		=> $this->lang->line('menu_forum'),
+				"menu_annuaire"		=> $this->lang->line('menu_annuaire'),
+				"menu_module"		=> $this->lang->line('menu_module'),
+				"menu_logout"		=> $this->lang->line('menu_logout')
 						);
-			#if ($this->session->userdata('bind') === false)
-			#{
-				#$ds = $this->ldap_bind("uid=kescalie,ou=2013,ou=people,dc=42,dc=fr", "666"); #On laisse pas son mdp ici
-				#$this->ldap_db($ds);
-				#$this->session->set_userdata('bind', 1);
-			#}
-			$this->load->view('perso', $data);
+			if ($this->session->userdata('status') > 0)
+				$data['menu_admin'] = $this->lang->line('menu_admin');
+			$this->load->view('perso.php', $data);
 		}
 		else
 		{
-			$this->lang->load('menu', $this->session->userdata('language'));
 			$data['menu_home'] = $this->lang->line('menu_home');
 			$data['menu_login'] = $this->lang->line('menu_login');
 			$data['menu_newsletter'] = $this->lang->line('menu_newsletter');
@@ -123,6 +118,8 @@ class Forum extends CI_Controller
 			$this->forum_model->add_message($data);
 			redirect("forum/view_topic?tid=" . $data['tid']); #on redirige vers la page du topic du message
 		}
+		else
+			redirect("forum/index");
 	}
 
 	public function edit_message()

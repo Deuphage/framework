@@ -11,9 +11,9 @@
 		{
 			echo "<p><a href=\"".  site_url('forum/view_topic?tid=' . $topic->id) . "\">" . $topic->title . "</a> ";
 			echo $topic->description;
-			if (strcmp($topic->login, $this->session->userdata('login')) == 0)
+			if ($this->session->userdata('status') > 0 || ($this->session->userdata('login') && strcmp($topic->login, $this->session->userdata('login')) == 0))
 			{
-				echo "<a href=\"".  site_url('forum/edit_topic?tid=' . $topic->id) . "\">" . " EDIT</a>";
+				echo "<a href=\"".  site_url('forum/edit_topic?tid=' . $topic->id . "&title=". $topic->title . "&description=" . $topic->description) . "\">" . " EDIT</a>";
 				echo form_open('forum/delete_topic');
 				echo form_hidden('id', $topic->id);
 				echo form_submit('delete_topic', 'delete');

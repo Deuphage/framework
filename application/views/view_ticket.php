@@ -10,9 +10,12 @@
  			echo "<legend>Description :</legend>";
 			echo $info_ticket[0]->description . "<br>";
 			echo "<legend>Messages :</legend>";
-			foreach ($messages_list as $message)
+			if ($messages_list)
 			{
-				echo $message->login . " said: " . $message->message . "<br>";
+				foreach ($messages_list as $message)
+				{
+					echo $message->login . " said: " . $message->message . "<br>";
+				}
 			}
 			echo form_open('dashboard/new_message');
 			echo form_hidden('tid', $info_ticket[0]->id);

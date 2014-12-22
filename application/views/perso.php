@@ -27,11 +27,12 @@
       <ul class="nav navbar-nav">
         <li><a href="<?php echo site_url('intra/main')?>"><?php echo $menu_home;?></a></li>
 		<li><a href="<?php echo site_url('intra/profile')?>"><?php echo $menu_profile;?></a></li>
-        <?php
-        	if ($this->session->userdata('status') > 0)
-        		echo "<li><a href=" . site_url('intra/admin') .">" . $menu_admin . "</a></li>";
-        	?>
-
+		<?php
+		if (isset($menu_admin))
+        	echo "<li><a href=\"" . site_url('intra/admin'). "\">" . $menu_admin . "</a></li>";
+        if (isset($menu_module))
+        	echo "<li><a href=\"" . site_url('module'). "\">" . $menu_module . "</a></li>";
+        ?>
 	 	<li><a href="<?php echo site_url('intra/email')?>"><?php echo $menu_newsletter;?></a></li>
 	 	<li><a href="<?php echo site_url('intra/annuaire')?>"><?php echo "Annuaire";?></a></li>
 	 	<li><a href="<?php echo site_url('forum')?>"><?php echo $menu_forum;?></a></li>

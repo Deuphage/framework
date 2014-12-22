@@ -14,11 +14,12 @@ class Dashboard extends CI_Controller
 				'menu_home'=> $this->lang->line('menu_home'),
 				'menu_profile'=> $this->lang->line('menu_profile'),
 				'menu_newsletter' => $this->lang->line('menu_newsletter'),
-				'menu_admin' => $this->lang->line('menu_admin'), // Ne pas afficher si non-administrateur!
 				'menu_forum' => $this->lang->line('menu_forum'),
 				"menu_annuaire" => $this->lang->line('menu_annuaire'),
 				'menu_logout' => $this->lang->line('menu_logout')
 						);
+			if ($this->session->userdata('status') > 0)
+				$data['menu_admin'] = $this->lang->line('menu_admin');
 			$this->load->view('perso', $data);
 		}
 		else
@@ -49,8 +50,10 @@ class Dashboard extends CI_Controller
 			$this->dashboard_model->new_ticket($data);
 			redirect("intra/profile");
 		}
-		$this->load->view('new_ticket');
+		else
+			$this->load->view('new_ticket');
 	}
+
 	public function view_ticket()
 	{
 		$this->form_validation->set_rules('id', 'Ticket ID', 'trim|required|xss_clean');
@@ -118,7 +121,7 @@ class Dashboard extends CI_Controller
 			$data['id'] = $this->input->post('id');
 			$this->dashboard_model->open_ticket($data);
 
-			if ($this->session->userdata('status') > 0)
+			if ($this->session->userdata('userdata') > 0)
 				redirect('intra/admin');
 			else
 				redirect('intra/profile');

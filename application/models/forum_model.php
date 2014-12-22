@@ -28,7 +28,7 @@ class Forum_model extends CI_Model
 			return ($this->db->insert_id());
 		}
 		else
-			return (-1);
+			return (FALSE);
 	}
 
 	public function edit_topic($data)

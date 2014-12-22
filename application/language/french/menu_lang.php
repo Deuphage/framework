@@ -9,3 +9,4 @@ $lang['menu_newsletter']=	"Chope les nouveautés !";
 $lang['menu_register']=		"S'enregistrer";
 $lang['menu_forum']=        "Forum";
 $lang['menu_annuaire']=     "Annuaire";
+$lang['menu_module']=       "Modules";

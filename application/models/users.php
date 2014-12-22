@@ -4,9 +4,10 @@ class Users extends CI_Model
 {
 	public function aut_login($login, $pass)
 	{
-		$this->db->where('login', $login);
-		$this->db->where('pass', sha1($pass));
-		$req = $this->db->get('users');
+		$where_cond = array('login'=>$login, 'pass'=>sha1($pass));
+	//	$this->db->where('login', $login);
+	//	$this->db->where('pass', sha1($pass));
+		$req = $this->db->get_where('users', $where_cond);
 		if ($req->num_rows() > 0)
 		{
 			return (true);
@@ -21,24 +22,7 @@ class Users extends CI_Model
 			return (true);
 		}
 		else
-		{
 			echo 'Login already used';
-			return (false);
-		}
-	}
-	public function check_login_ldap($login)
-	{
-		$this->db->where('uid', $login);
-		$req = $this->db->get('ldap');
-		if ($req->num_rows() == 0)
-		{
-			return (true);
-		}
-		else
-		{
-			echo 'Login already used';
-			return (false);
-		}
 	}
 	public function check_permission($login)
 	{

@@ -8,6 +8,7 @@ class Ldap extends CI_Model
 	{
 		$this->db->insert('ldap', $data);
 	}
+
 	public function check_data($dn)
 	{
 		$this->db->where('dn', $dn);
@@ -17,6 +18,7 @@ class Ldap extends CI_Model
 			return (true);
 		}
 	}
+
 	public function ldap_list()
 	{
 		$tab = array();
@@ -24,6 +26,19 @@ class Ldap extends CI_Model
 		foreach ($req->result() as $row)
 			$tab[] = $row;
 		return ($tab);
+	}
+
+	public function get_id($uid)
+	{
+		$this->db->select('id');
+		$query = $this->db->get_where('ldap', array('uid' => $uid));
+		if ($query->num_rows() > 0)
+		{
+			$result = $query->row();
+			return ($result->id);
+		}
+		else
+			return (FALSE);
 	}
 }
 ?>

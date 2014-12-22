@@ -43,14 +43,16 @@ class Intra extends CI_Controller
 				'menu_home'=> $this->lang->line('menu_home'),
 				'menu_profile'=> $this->lang->line('menu_profile'),
 				'menu_newsletter' => $this->lang->line('menu_newsletter'),
-				'menu_admin' => $this->lang->line('menu_admin'), // Ne pas afficher si non-administrateur!
 				'menu_forum' => $this->lang->line('menu_forum'),
 				"menu_annuaire" => $this->lang->line('menu_annuaire'),
+				"menu_module"		=> $this->lang->line('menu_module'),
 				'menu_logout' => $this->lang->line('menu_logout')
 						);
+			if ($this->session->userdata('status') > 0)
+				$data['menu_admin'] = $this->lang->line('menu_admin');
 			if ($this->session->userdata('bind') === false)
 			{
-				$this->ldap_bind('Toimoinous', ''); #On laisse pas son mdp ici
+				$this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
 				$this->session->set_userdata('bind', TRUE);
 			}
 			$this->load->view('perso', $data);
@@ -102,10 +104,13 @@ class Intra extends CI_Controller
 	public function admin()
 	{
 		$this->load->model('dashboard_model');
+		$this->load->model('module_model');
 		$this->lang->load('form', $this->session->userdata('language'));
 		$this->lang->load('title', $this->session->userdata('language'));
 		$this->load->model('users');
-		$data = array(
+		if ($this->users->check_permission($this->session->userdata('login')) > 0)
+		{
+			$data = array(
 			'title_admin'=>$this->lang->line('title_admin'),
 			'title_panel'=>$this->lang->line('title_panel'),
 			'form_username'=>$this->lang->line('form_username'),
@@ -119,10 +124,9 @@ class Intra extends CI_Controller
 			'form_control'=>$this->lang->line('form_control'),
 			'user_list'=>$this->users->user_list(),
 			'admin_list'=>$this->users->admin_list(),
-			'list_ticket'=>$this->dashboard_model->list_tickets()
+			'list_ticket'=>$this->dashboard_model->list_tickets(),
+			'modules'=>$this->module_model->list_modules(FALSE)
 					);
-		if ($this->users->check_permission($this->session->userdata('login')) > 0)
-		{
 			if ($this->session->userdata('login'))
 			{
 				$log = array(
@@ -300,6 +304,8 @@ class Intra extends CI_Controller
     	{
     		$data['autolog'] = $this->create_url();
     	}
+    	else
+    		$data['autolog'] = '';
 		if ($this->session->userdata('login'))
 		{
 			$log = array(
@@ -470,6 +476,7 @@ class Intra extends CI_Controller
 	    	{
 	    		echo "NOPE\n";die;//debug
 	    	}
+	    	var_dump($info); die;
 	    	for ($i=0; $i<$info["count"]; $i++)
 	    	{
 	    		$data = array(
@@ -499,7 +506,7 @@ class Intra extends CI_Controller
 	}
 	public function load_ldap()
 	{
-		$ds = $this->ldap_bind('toimoinous', ''); #On laisse pas son mdp ici
+		$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
 		$this->ldap_db($ds);
 		redirect('intra/admin');
 	}

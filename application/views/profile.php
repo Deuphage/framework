@@ -62,6 +62,7 @@
 					echo form_open('dashboard/view_ticket');
 					echo form_hidden('id', $ticket->id);
 					echo form_submit('go', 'Go'). "<br>";
+					echo form_close();
 				}
 			}
 		}
