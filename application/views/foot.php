@@ -45,9 +45,7 @@
 	    <input type="hidden" name="language" value="japanese">
     	<input type="submit" class="japanese" name="japanese" value=""/>
 	</form>
-	<?php echo form_open('intra/ldap_reset');?>
-			<button type="submit">Reset LDAP</button>
-	</form>
+
 	 </p>
   </div>
 	</body>
