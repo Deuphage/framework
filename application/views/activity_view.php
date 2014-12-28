@@ -12,7 +12,7 @@
 			{
 				if ($status != 3 && strtotime($elem->reg_end) > time())
 					echo form_open('module/activity_unsubscribe', '', array('uid'=>$uid, 'aid'=>$elem->aid, 'mid'=>$elem->mid));
-				echo '<p class="subscribed"><a href="' . base_url() . 'index.php/module/subject?mid='. $elem->mid. '"">' . $elem->name . "</a>\t";
+				echo '<p class="subscribed"><a href="' . base_url() . 'index.php/module/subject_view?mid='. $elem->mid. '&subject=' . $elem->subject .'"">' . $elem->name . "</a>\t";
 				if ($status != 3 && strtotime($elem->reg_end) > time())
 					echo form_submit('unsubscribe', 'Unsubscribe') . '</form>';
 				echo "</p>";

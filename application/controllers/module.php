@@ -53,7 +53,6 @@ class Module extends CI_controller
 			$this->load->model('module_model');
 			$this->load->model('forum_model');
 			$data = array(
-				'name'=>$this->input->post('name'),
 				'credits'=>$this->input->post('credits'),
 				'places_nb'=>$this->input->post('places_nb'),
 				'reg_start'=>$this->input->post('reg_start'),
@@ -76,6 +75,57 @@ class Module extends CI_controller
 			redirect('intra/admin');
 	}
 
+	public function module_edit()
+	{
+		$this->form_validation->set_rules('id', 'Module name', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$this->load->model('module_model');
+			$data = array(
+				'id'=>$this->input->post('id'));
+			if ($this->input->post('credits'))
+				$data['credits'] = $this->input->post('credits');
+			if ($this->input->post('places_nb'))
+				$data['places_nb'] = $this->input->post('places_nb');
+			if ($this->input->post('reg_start'))
+				$data['reg_start'] = $this->input->post('reg_start');
+			if ($this->input->post('reg_end'))
+				$data['reg_end'] = $this->input->post('reg_end');
+			if ($this->input->post('module_start'))
+				$data['module_start'] = $this->input->post('module_start');
+			if ($this->input->post('module_end'))
+				$data['module_end'] = $this->input->post('module_end');
+			if ($this->input->post('name'))
+				$data['name'] = $this->input->post('name');
+			$this->module_model->edit_module($data);
+
+			redirect('module/index');
+		}
+		else
+			redirect('intra/admin');
+	}
+
+	public function module_delete()
+	{
+		$this->form_validation->set_rules('id', 'Module name', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$this->load->model('module_model');
+			$id = $this->input->post('id');
+			$this->module_model->delete_module_subscription($id);
+			$activities = $this->module_model->list_activities($id, FALSE);
+			foreach ($activities['unsubscribed'] as $elem)
+			{
+			  	$this->module_model->delete_activity_subscription($elem->id);
+			  	$this->module_model->delete_activity($elem->id);
+			}
+			$this->module_model->delete_module($id);
+			redirect('module/index');
+		}
+		else
+			redirect('intra/admin');
+	}
+
 	public function module_subscribe()
 	{
 		$uid = $this->input->post('uid');
@@ -92,6 +142,22 @@ class Module extends CI_controller
 		if ($uid != FALSE && $mid != FALSE)
 			$this->module_model->unsubscribe_from_module($uid, $mid);
 		redirect('module/index');
+	}
+
+	public function admin_module()
+	{
+		if ($this->input->post('action') === 'create')
+		{
+			$this->module_create();
+		}
+		if ($this->input->post('action') === 'modify')
+		{
+			$this->module_edit();
+		}
+		if ($this->input->post('action') === 'delete')
+		{
+			$this->module_delete();
+		}
 	}
 
 	public function activities()
@@ -160,6 +226,61 @@ class Module extends CI_controller
 			redirect('intra/admin');
 	}
 
+	public function activity_edit()
+	{
+		$this->form_validation->set_rules('id', 'activity name', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$this->load->model('module_model');
+			$data = array(
+				'id'=>$this->input->post('id'));
+			if ($this->input->post('mid'))
+				$data['mid'] = $this->input->post('mid');
+			if ($this->input->post('description'))
+				$data['description'] = $this->input->post('description');
+			if ($this->input->post('places_nb'))
+				$data['places_nb'] = $this->input->post('places_nb');
+			if ($this->input->post('group_size'))
+				$data['group_size'] = $this->input->post('group_size');
+			if ($this->input->post('peer_correcting_nb'))
+				$data['peer_correcting_nb'] = $this->input->post('peer_correcting_nb');
+			if ($this->input->post('group_gen'))
+				$data['group_gen'] = $this->input->post('group_gen');
+			if ($this->input->post('type'))
+				$data['type'] = $this->input->post('type');
+			if ($this->input->post('reg_start'))
+				$data['reg_start'] = $this->input->post('reg_start');
+			if ($this->input->post('reg_end'))
+				$data['reg_end'] = $this->input->post('reg_end');
+			if ($this->input->post('module_start'))
+				$data['module_start'] = $this->input->post('module_start');
+			if ($this->input->post('module_end'))
+				$data['module_end'] = $this->input->post('module_end');
+			if ($this->input->post('name'))
+				$data['name'] = $this->input->post('name');
+			$this->module_model->edit_activity($data);
+
+			redirect('module/index');
+		}
+		else
+			redirect('intra/admin');
+	}
+
+	public function activity_delete()
+	{
+		$this->form_validation->set_rules('id', 'activity name', 'trim|required|xss_clean');
+		if ($this->form_validation->run())
+		{
+			$this->load->model('module_model');
+			$id = $this->input->post('id');
+			$this->module_model->delete_activity_subscription($id);
+			$this->module_model->delete_activity($id);
+			redirect('module/index');
+		}
+		else
+			redirect('intra/admin');
+	}
+
 	public function activity_subscribe()
 	{
 		$uid = $this->input->post('uid');
@@ -180,6 +301,21 @@ class Module extends CI_controller
 		redirect('module/activities?mid=' . $mid);
 	}
 
+	public function admin_activity()
+	{
+		if ($this->input->post('action') === 'create')
+		{
+			$this->activity_create();
+		}
+		if ($this->input->post('action') === 'modify')
+		{
+			$this->activity_edit();
+		}
+		if ($this->input->post('action') === 'delete')
+		{
+			$this->activity_delete();
+		}
+	}
 	public function sujet_test()
 	{
 		//var_dump($_FILES);
@@ -198,6 +334,13 @@ class Module extends CI_controller
 		if ($resultat)
 			echo $nom;
 	}
+
+	public function subject_view()
+	{
+		$this->load->view('subject_view');
+	}
+
+
 }
 
 ?>

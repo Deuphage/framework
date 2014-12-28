@@ -45,7 +45,7 @@
 	    <input type="hidden" name="language" value="japanese">
     	<input type="submit" class="japanese" name="japanese" value=""/>
 	</form>
-
+	</form>
 	 </p>
   </div>
 	</body>

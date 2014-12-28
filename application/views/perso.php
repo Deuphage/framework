@@ -36,6 +36,7 @@
 	 	<li><a href="<?php echo site_url('intra/email')?>"><?php echo $menu_newsletter;?></a></li>
 	 	<li><a href="<?php echo site_url('intra/annuaire')?>"><?php echo "Annuaire";?></a></li>
 	 	<li><a href="<?php echo site_url('forum')?>"><?php echo $menu_forum;?></a></li>
+	 	<li><a href="<?php echo site_url('e_learning')?>"><?php echo "E-learning" ?></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
 	 	<li><a href="<?php echo site_url('intra/logout')?>"><?php echo $menu_logout;?></a></li>

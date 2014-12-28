@@ -51,6 +51,11 @@ class Module_model extends CI_Model
 		$this->db->where('id', $id);
 		$this->db->delete('module');
 	}
+	public function delete_module_subscription($mid)
+	{
+		$this->db->where('mid', $mid);
+		$this->db->delete('module_subscriptions');
+	}
 
 	public function subscribe_to_module($uid, $mid)
 	{
@@ -61,6 +66,13 @@ class Module_model extends CI_Model
 	{
 		$this->db->where(array('uid'=>$uid, 'mid'=>$mid));
 		$this->db->delete('module_subscriptions');
+	}
+
+	public function list_all_activities()
+	{
+		$req = $this->db->get('activity');
+		$activities = $req->result();
+		return ($activities);
 	}
 
 	public function list_activities($mid, $uid)	// $id is a user id, to retrieve this user's activities
@@ -106,6 +118,18 @@ class Module_model extends CI_Model
 	{
 		$this->db->where('id', $id);
 		$this->db->delete('activity');
+	}
+
+	public function delete_module_activity($mid)
+	{
+		$this->db->where('id', $mid);
+		$this->db->delete('activity');
+	}
+
+	public function delete_activity_subscription($aid)
+	{
+		$this->db->where('aid', $aid);
+		$this->db->delete('activity_subscriptions');
 	}
 
 	public function subscribe_to_activity($uid, $aid)

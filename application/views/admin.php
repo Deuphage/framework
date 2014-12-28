@@ -53,22 +53,20 @@
 			<?php echo form_open('intra/logger', array('method'=>'link')); ?>
 	 			<h4><input type="submit" value="<?php echo "View" ?>"></h4>
 	 		<?php echo form_close();?>
-	 		<!-- Test sujet -->
-	 		<?php echo form_open('module/sujet_test', array('method'=>'post', 'enctype'=>'multipart/form-data')); ?>
-		    <label for="sub">File PDF (max. 2 Mo) :</label><br />
-		    <input type="hidden" name="MAX_FILE_SIZE" value="2048576" />
-		    <center><input type="file" name="sub" id="sub" /><br /></center>
-		    <label for="title">Title</label><br />
-		    <input type="text" name="title" id="title" /><br />
-			<input type="submit" name="submit" value="Upload" />
-			<?php echo form_close();?>
+	 		
 	 		<!-- Partie pedagogique -->
 	 			<!-- Module -->
 	 		<legend><?php echo "Education" ?>:</legend>
-			<?php echo form_open('module/module_create');?>
-			<h4>Module creation:</h4>
+			<?php echo form_open('module/admin_module');?>
+			<h4>Module administration:</h4>
 			<h5>Module name</h5>
-			<input type="text" name="name" value="Module" />
+			<select name="id">
+			<?php foreach($modules['unsubscribed'] as $elem)
+				echo "<option value='$elem->id'>$elem->id $elem->name</option>";
+			?>
+			</select>
+			<br>
+			<p><input type="text" name="name" value="" /></p>
 			<h5>Places</h5>
 			<input type="text" name="places_nb" value="1" />
 			<h5>Credits</h5>
@@ -129,14 +127,26 @@
 			<div id="calendar"></div>
 			</div>
 			</div>
+			<h5><?php echo $form_action?></h5>
+			<select name="action"/>
+				<option value="create"><?php echo "Create";?></option>
+				<option value="modify"><?php echo $form_action_modify;?></option>
+				<option value="delete"><?php echo $form_action_delete;?></option>
+			</select>
 			<br>
-			<input type="submit" value="Create Module">
+			<h4><input type="submit" value="Action on Module"></h4>
 			<?php echo form_close();?>
 				<!-- Activité -->
-			<?php echo form_open('module/activity_create',  array('method'=>'post', 'enctype'=>'multipart/form-data'));?>
+			<?php echo form_open('module/admin_activity',  array('method'=>'post', 'enctype'=>'multipart/form-data'));?>
 			<h4>Activity creation:</h4>
 			<h5>Activity name</h5>
-			<input type="text" name="name" value="Activity" />
+			<select name="id">
+			<?php foreach($activities as $elem)
+				echo "<option value=$elem->id>$elem->id $elem->name</option>";
+			?>
+			</select>
+			<br>
+			<p><input type="text" name="name" value="Activity" /></p>
 			<h5>File PDF (max. 2 Mo) :</h5>
 		    <input type="hidden" name="MAX_FILE_SIZE" value="2048576" />
 		    <center><input type="file" name="sub" id="sub" /><br /></center>
@@ -218,8 +228,14 @@
 			<div id="calendar"></div>
 			</div>
 			</div>
+			<h5><?php echo $form_action?></h5>
+			<select name="action"/>
+				<option value="create"><?php echo "Create";?></option>
+				<option value="modify"><?php echo $form_action_modify;?></option>
+				<option value="delete"><?php echo $form_action_delete;?></option>
+			</select>
 			<br>
-			<input type="submit" value="Create activity">
+			<h4><input type="submit" value="Action on Activity"></h4>
 			<?php echo form_close();?>
 				<!-- Partie ticket -->
 			<legend><?php echo "Tickets" ?>:</legend>
