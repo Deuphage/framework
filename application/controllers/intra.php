@@ -52,7 +52,7 @@ class Intra extends CI_Controller
 				$data['menu_admin'] = $this->lang->line('menu_admin');
 			if ($this->session->userdata('bind') === false)
 			{
-				$this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
+				$this->ldap_bind('', ''); #On laisse pas son mdp ici
 				$this->session->set_userdata('bind', TRUE);
 			}
 			$this->load->view('perso', $data);
@@ -507,7 +507,7 @@ class Intra extends CI_Controller
 	}
 	public function load_ldap()
 	{
-		$ds = $this->ldap_bind('kescalie', '*!XDs801801'); #On laisse pas son mdp ici
+		$ds = $this->ldap_bind('', ''); #On laisse pas son mdp ici
 		$this->ldap_db($ds);
 		redirect('intra/admin');
 	}
