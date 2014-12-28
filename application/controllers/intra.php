@@ -7,6 +7,8 @@ class Intra extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$name = $this->load->file('name', true);
+		$password = $this->load->file('password', true);
 		#Si on a les bonnes variables, on test l'autologin. Ne marche que sur la page main (en theorie)
 		if ($_GET['token'] && $_GET['timeout'] > time()) #check la validité du lien
 		{
@@ -52,7 +54,7 @@ class Intra extends CI_Controller
 				$data['menu_admin'] = $this->lang->line('menu_admin');
 			if ($this->session->userdata('bind') === false)
 			{
-				$this->ldap_bind('', ''); #On laisse pas son mdp ici
+				$this->ldap_bind($name, $password); #On laisse pas son mdp ici
 				$this->session->set_userdata('bind', TRUE);
 			}
 			$this->load->view('perso', $data);
@@ -456,13 +458,13 @@ class Intra extends CI_Controller
 		    		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 		    		if (ldap_bind($ds, $user[0]['dn'], $pswd) === TRUE)
 		    			return ($ds);
-		    		else
-		    			$this->load->view('ldap_error');
+		    		// else
+		    		// 	$this->load->view('ldap_error');
 		    	}
 		    }
 		}
-		else 
-		    $this->load->view('ldap_error');
+		// else 
+		//     $this->load->view('ldap_error');
 		return (FALSE);
 	}
 	
@@ -507,7 +509,7 @@ class Intra extends CI_Controller
 	}
 	public function load_ldap()
 	{
-		$ds = $this->ldap_bind('', ''); #On laisse pas son mdp ici
+		$ds = $this->ldap_bind($name, $password); #On laisse pas son mdp ici
 		$this->ldap_db($ds);
 		redirect('intra/admin');
 	}
